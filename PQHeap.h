@@ -15,7 +15,8 @@ class PQHeap
         int heap_count(); //number of nodes in the heap
 		void print_heap();
 		enemy* get_max();
-		enemy* delete_max();
+		enemy* delete_max(); //returns the enemy pointer with max priority after removing it from the heap array (it doesn't delete the enemy from memory)
+		enemy* delete_enem(enemy* enemyptr); //returns the specified enemy pointer after removing it from the heap array (it doesn't delete the enemy from memory)
 
 
     protected:

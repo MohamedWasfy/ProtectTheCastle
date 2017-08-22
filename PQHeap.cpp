@@ -22,9 +22,8 @@ void PQHeap::insert_enemy (enemy* enemyptr)
     }
     else {
         heapArray.push_back(enemyptr);
-		int i;
-		for (i = heap_count(); i > 1; i /= 2) {
-			if (heapArray[i] > heapArray[i/2])
+		for (int i = heap_count(); i > 1; i /= 2) {
+			if (heapArray[i]->priority > heapArray[i/2]->priority)
 				swap_elements(i, i / 2);
 			else
 				return;
@@ -79,7 +78,61 @@ enemy* PQHeap::delete_max()
 	heapArray[1] = heapArray[heap_count()];
 	heapArray.pop_back();
 
-
+	int i;
+	for (i = 1; (i * 2) + 1 <= heap_count();) { //applies only if the node has two children
+		if (heapArray[i]->priority < heapArray[i * 2]->priority || heapArray[i]->priority < heapArray[(i * 2) + 1]->priority) {
+			if (heapArray[i * 2]->priority > heapArray[(i * 2) + 1]->priority) {
+				swap_elements(i, i * 2);
+				i = i * 2;
+			}
+			else {
+				swap_elements(i, (i * 2) + 1);
+				i = (i * 2) + 1;
+			}
+		}
+		else
+			return temp;
+	}
+	if ((i * 2) == heap_count()) { //corner case if the next to last node has one child and not two
+		if (heapArray[i]->priority < heapArray[i * 2]->priority)
+			swap_elements(i, i * 2);
+	}
 
 	return temp;
+}
+
+enemy* PQHeap::delete_enem(enemy* enemyptr)
+{
+	int max = heap_count();
+	int ind = 1;
+	while (ind <= max && enemyptr != heapArray[ind])
+		ind++;
+
+	if (ind > max)
+		return enemyptr; //enemyptr is not in the heap array
+	else {
+		heapArray[ind] = heapArray[max];
+		heapArray.pop_back();
+	}
+
+	int i;
+	for (i = ind; (i * 2) + 1 <= heap_count();) { //applies only if the node has two children
+		if (heapArray[i]->priority < heapArray[i * 2]->priority || heapArray[i]->priority < heapArray[(i * 2) + 1]->priority) {
+			if (heapArray[i * 2]->priority > heapArray[(i * 2) + 1]->priority) {
+				swap_elements(i, i * 2);
+				i = i * 2;
+			}
+			else {
+				swap_elements(i, (i * 2) + 1);
+				i = (i * 2) + 1;
+			}
+		}
+		else
+			return enemyptr;
+	}
+	if ((i * 2) == heap_count()) { //corner case if the next to last node has one child and not two
+		if (heapArray[i]->priority < heapArray[i * 2]->priority)
+			swap_elements(i, i * 2);
+	}
+	return enemyptr;
 }
